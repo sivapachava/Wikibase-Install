@@ -45,7 +45,7 @@ services:
     restart: always
     build:
       context: ./wdqs-frontend/latest
-      dockerfile: Dockerfile
+      dockerfile: frontend.Dockerfile
     ports:
      - "8282:80"
     depends_on:
