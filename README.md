@@ -1,33 +1,16 @@
-## LEGACY: wikibase-docker
+# Wikibase release pipeline
 
-**This repository will no longer be maintained by WMDE.**
+## Repository overview
 
-Please see the announcement for new WMDE maintained docker images https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/thread/WW4LZJINT3PIG3DOYKTXIWVP3WAKWXCT/
-Along with docs https://www.mediawiki.org/wiki/Wikibase/Docker
+The wikibase release pipeline contains scripts used for building, testing and publishing Wikibase docker images and tarballs.
 
------
+It contains a set of build targets defined in the [Makefile](./Makefile) which can be executed in two different ways.
 
-### Issue tracking
+When [building](docs/topics/pipeline.md), use the [build.sh](build.sh) wrapper script to do the building inside a docker-container, this way files aren't littered around the repository but only in the `artifacts/` directory.
 
-Please do not file issues against these legacy docker images.
+For [testing](docs/topics/testing.md), you can use `test`, `test-all` make targets.
 
-### Development
+## Documentation
 
-These images are no longer developed.
+The pipeline documentation can be found [here](docs/index.md).
 
-### Further reading
-
- - [Docker Wikibase Install Docs](https://www.mediawiki.org/wiki/Wikibase/Docker)
- - [Announcement of new WMDE maintained docker images & releases](https://lists.wikimedia.org/hyperkitty/list/wikibaseug@lists.wikimedia.org/thread/WW4LZJINT3PIG3DOYKTXIWVP3WAKWXCT/)
-
-### Old Repo Guide
-
-Each legacy image contained within this repo has its own README with more detailed information:
-
-LEGACY Image name               | Description   | README
------------------------- | ------------- | ----------
-[`wikibase/wikibase`](https://hub.docker.com/r/wikibase/wikibase) | MediaWiki with the Wikibase extension| [README](https://github.com/wmde/wikibase-docker/blob/master/wikibase/README.md)
-[`wikibase/wdqs`](https://hub.docker.com/r/wikibase/wdqs) | Blazegraph SPARQL query service backend | [README](https://github.com/wmde/wikibase-docker/blob/master/wdqs/README.md)
-[`wikibase/wdqs-proxy`](https://hub.docker.com/r/wikibase/wdqs-proxy) | Proxy to make the query service READONLY and enforce query timeouts | [README](https://github.com/wmde/wikibase-docker/blob/master/wdqs-proxy/README.md)
-[`wikibase/wdqs-frontend`](https://hub.docker.com/r/wikibase/wdqs-frontend) | UI for the SPARQL query service | [README](https://github.com/wmde/wikibase-docker/blob/master/wdqs-frontend/README.md)
-[`wikibase/quickstatements`](https://hub.docker.com/r/wikibase/quickstatements) | UI to add data to Wikibase | [README](https://github.com/wmde/wikibase-docker/blob/master/quickstatements/README.md)

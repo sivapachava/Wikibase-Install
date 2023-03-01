@@ -1,0 +1,77 @@
+version: '3'
+
+services:
+  download_artifacts:
+    build:
+      context: ../Docker/publish/download_artifacts
+      dockerfile: Dockerfile
+    environment:
+     - GITHUB_TOKEN
+     - WORKFLOW_RUN_NUMBER
+    volumes:
+      - ../artifacts:/extractedArtifacts
+  tag_git:
+    build:
+      context: ../Docker/publish/tag_git
+      dockerfile: Dockerfile
+    environment:
+     - WORKFLOW_RUN_NUMBER
+     - WIKIBASE_BRANCH_NAME=master
+     - RELEASE_VERSION
+     - WMDE_RELEASE_VERSION
+     - DRY_RUN
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - ${HOME}/.gitconfig:/root/.gitconfig:ro
+      - ../git_cache/:/git_cache
+  upload_dockerhub:
+    build:
+      context: ../Docker/publish/upload_dockerhub
+      dockerfile: Dockerfile
+    privileged: true
+    environment:
+      - ELASTICSEARCH_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/elasticsearch.docker.tar.gz
+      - WIKIBASE_BUNDLE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase-bundle.docker.tar.gz
+      - WIKIBASE_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wikibase.docker.tar.gz
+      - WDQS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs.docker.tar.gz
+      - WDQS_FRONTEND_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-frontend.docker.tar.gz
+      - QUICKSTATEMENTS_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/quickstatements.docker.tar.gz
+      - WDQS_PROXY_DOCKER_PATH=/extractedArtifacts/BuildArtifacts/wdqs-proxy.docker.tar.gz
+
+      - WDQS_IMAGE_NAME
+      - WDQS_FRONTEND_IMAGE_NAME
+      - WDQS_PROXY_IMAGE_NAME
+      - QUICKSTATEMENTS_IMAGE_NAME
+      - WIKIBASE_IMAGE_NAME
+      - WIKIBASE_BUNDLE_IMAGE_NAME
+      - ELASTICSEARCH_IMAGE_NAME
+
+      - WDQS_VERSION
+      - RELEASE_VERSION
+      - WMDE_RELEASE_VERSION
+      - ELASTICSEARCH_VERSION
+      - ELASTICSEARCH_PLUGIN_EXTRA_VERSION
+
+      - DOCKER_HUB_REPOSITORY_NAME
+      - DOCKER_HUB_ACCESS_TOKEN
+      - DOCKER_HUB_ID
+      - DRY_RUN
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+  upload_tar:
+    build:
+      context: ../Docker/publish/upload_tar
+      dockerfile: Dockerfile
+    privileged: true
+    environment:
+     - RELEASE_HOST
+     - RELEASE_USER
+     - RELEASE_VERSION
+     - RELEASE_MAJOR_VERSION
+     - RELEASE_DIR
+     - RELEASE_SSH_IDENTITY
+     - WMDE_RELEASE_VERSION
+     - DRY_RUN
+    volumes:
+      - ../artifacts/${WORKFLOW_RUN_NUMBER}:/extractedArtifacts
+      - ${HOME}/.ssh/:/ssh-keys/:ro
